@@ -3,6 +3,16 @@ import unittest
 from collections import defaultdict
 
 
+def is_unique_my_solution(string: str) -> bool:
+    letters = {}
+    for character in string:
+        if character in letters.keys():
+            return False
+        else:
+            letters[character] = None
+    return True
+
+
 def is_unique_chars_algorithmic(string):
     # Assuming character set is ASCII (128 characters)
     if len(string) > 128:
@@ -80,6 +90,7 @@ class Test(unittest.TestCase):
         ("".join([chr(val // 2) for val in range(129)]), False),  # non-unique 129 chars
     ]
     test_functions = [
+        is_unique_my_solution,
         is_unique_chars_pythonic,
         is_unique_chars_algorithmic,
         is_unique_bit_vector,
