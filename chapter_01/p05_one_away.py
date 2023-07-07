@@ -3,6 +3,29 @@ import time
 import unittest
 
 
+def is_one_away(string1, string2):
+    """Given two strings return True if they are one character away (remove, insert or replace)"""
+    if len(string1) == len(string2):
+        # check for replacement
+        number_replacements = sum([1 if l1!=l2 else 0 for l1, l2 in zip(string1, string2)])
+        if number_replacements <= 1:
+            return True
+        else:
+            return False
+    else:
+        # removing / inserting one letter is symmetrical
+        longer = string1 if len(string1) > len(string2) else string2
+        shorter = string1 if len(string1) < len(string2) else string2
+        if len(longer) == len(shorter)+1:
+            # check removing
+            for i in range(len(longer)):
+                if longer[:i] + longer[i+1:] == shorter:
+                    return True
+            return False
+        else:
+            return False
+
+
 def are_one_edit_different(s1, s2):
     """Check if a string can converted to another string with a single edit"""
     if len(s1) == len(s2):
@@ -70,7 +93,7 @@ class Test(unittest.TestCase):
         ("ale", "elas", False),
     ]
 
-    testable_functions = [are_one_edit_different]
+    testable_functions = [is_one_away, are_one_edit_different]
 
     def test_one_away(self):
 
