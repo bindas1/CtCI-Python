@@ -2,6 +2,22 @@ import time
 import unittest
 
 
+def compress(string):
+    if string == '':
+        return string
+    current_letter = string[0]
+    letter_count = 1
+    compressed = ''
+    for letter in string[1:]+'*':
+        if letter == current_letter:
+            letter_count += 1
+        else:
+            compressed = compressed + current_letter + str(letter_count)
+            current_letter = letter
+            letter_count = 1
+    return min(string, compressed, key=len)
+
+
 def compress_string(string):
     compressed = []
     counter = 0
@@ -30,6 +46,7 @@ class Test(unittest.TestCase):
         ("", ""),
     ]
     testable_functions = [
+        compress,
         compress_string,
     ]
 
