@@ -3,6 +3,19 @@ import unittest
 from copy import deepcopy
 
 
+def rotate_notinplace(matrix):
+    """Rotates a matrix (n x n) by 90 degrees clockwise"""
+    rotated_matrix = []
+    
+    for i in range(len(matrix)):
+        new_row = []
+        for j in range(len(matrix)-1, -1, -1):
+            new_row.append(matrix[j][i])
+        rotated_matrix.append(new_row)
+        
+    return rotated_matrix
+
+
 def rotate_matrix(matrix):
     """rotates a matrix 90 degrees clockwise"""
     n = len(matrix)
@@ -79,6 +92,7 @@ class Test(unittest.TestCase):
         ),
     ]
     testable_functions = [
+        rotate_notinplace,
         rotate_matrix_pythonic,
         rotate_matrix,
         rotate_matrix_pythonic_alternate,
