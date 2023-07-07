@@ -2,6 +2,23 @@
 import string
 import unittest
 from collections import Counter
+import re
+
+
+def palindrome_permutation(permutation):
+    hash_map = {}
+    permutation = re.sub(r'[^a-z]', '', permutation.replace(' ', '').lower())
+    
+    for letter in permutation:
+        hash_map[letter] = permutation.count(letter)
+    count_odd = sum([1 if value%2 else 0 for value in hash_map.values()])
+        
+    if not len(permutation)%2 and count_odd==0:
+        return True
+    elif len(permutation)%2 and count_odd==1:
+        return True
+    else:
+        return False
 
 
 def clean_phrase(phrase):
@@ -88,6 +105,7 @@ class Test(unittest.TestCase):
         ("azAZ", True),
     ]
     testable_functions = [
+        palindrome_permutation,
         is_palindrome_permutation,
         is_palindrome_bit_vector,
         is_palindrome_permutation_pythonic,
