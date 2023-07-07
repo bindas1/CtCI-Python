@@ -3,6 +3,28 @@ import unittest
 from copy import deepcopy
 
 
+def my_zero_matrix(matrix):
+    """Given m x n matrix, replaces whole row and column for any cell that contains 0"""
+    m = len(matrix)
+    n = len(matrix[0])
+    rows = set()
+    columns = set()
+    
+    for i in range(len(matrix)):
+        for j in range(len(matrix)):
+            if matrix[i][j] == 0:
+                rows.add(i)
+                columns.add(j)
+    
+    for row in rows:
+        matrix[row] = [0] * n
+    for column in columns:
+        for row in range(m):
+            matrix[row][column] = 0
+                
+    return matrix
+
+
 def zero_matrix(matrix):
     m = len(matrix)
     n = len(matrix[0])
@@ -54,7 +76,7 @@ class Test(unittest.TestCase):
             ],
         )
     ]
-    testable_functions = [zero_matrix, zero_matrix_pythonic]
+    testable_functions = [my_zero_matrix, zero_matrix, zero_matrix_pythonic]
 
     def test_zero_matrix(self):
         for f in self.testable_functions:
