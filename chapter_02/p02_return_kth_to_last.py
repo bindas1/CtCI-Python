@@ -1,4 +1,37 @@
-from chapter_02.linked_list import LinkedList
+from linked_list import LinkedList, LinkedListNode
+
+
+def k_last_elem(linked_list: LinkedList, k: int) -> LinkedListNode:
+    front = linked_list.head
+    back = linked_list.head
+    for _ in range(k):
+        if not front:
+            return None
+        front = front.next
+    
+    # when front gets to None back is on the kth to last elem
+    while front:
+        front = front.next
+        back = back.next
+    return back
+    
+
+def get_size(linked_list):
+    head = linked_list.head
+    size = 0
+    while head:
+        head = head.next
+        size += 1
+    return size
+    
+def k_last_elem_recursive(linked_list: LinkedList, k: int) -> LinkedList:
+    size = get_size(linked_list)
+    k_front = size - k
+    runner = linked_list.head
+    
+    for i in range(k_front):
+        runner = runner.next
+    return runner
 
 
 def kth_to_last(ll, k):
@@ -41,6 +74,8 @@ test_cases = (
 def test_kth_to_last():
     for linked_list_values, k, expected in test_cases:
         ll = LinkedList(linked_list_values)
+        assert k_last_elem(ll, k).value == expected
+        assert k_last_elem_recursive(ll, k).value == expected
         assert kth_to_last(ll, k).value == expected
         assert kth_last_recursive(ll, k).value == expected
 
