@@ -1,4 +1,35 @@
-from chapter_02.linked_list import LinkedList
+from linked_list import LinkedList, LinkedListNode
+
+
+def partition_list(linked_list, x) -> LinkedList:
+    left = None
+    right = None
+    left_head = None
+    right_head = None
+    runner = linked_list.head
+    
+    while runner:
+        if runner.value < x:
+            if left is not None:
+                left.next = LinkedListNode(runner.value)
+                left = left.next
+            else:
+                left = LinkedListNode(runner.value)
+                left_head = left
+        else:
+            if right is not None:
+                right.next = LinkedListNode(runner.value)
+                right = right.next
+            else:
+                right = LinkedListNode(runner.value)
+                right_head = right
+        runner = runner.next
+        
+    # merge left with right
+    left.next = right_head
+    linked_list.head = left_head
+    
+    return linked_list
 
 
 def partition(ll, x):
@@ -42,7 +73,7 @@ def lr_partition(_ll: LinkedList, p: int) -> LinkedList:
 
 
 def test_lr_partition():
-    partitioners = [partition, lr_partition]
+    partitioners = [partition_list, partition, lr_partition]
     for partition_func in partitioners:
         # book example
         ll = LinkedList([3, 5, 8, 5, 10, 2, 1])
