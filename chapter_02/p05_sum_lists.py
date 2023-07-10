@@ -1,4 +1,54 @@
-from chapter_02.linked_list import LinkedList
+from linked_list import LinkedList
+from p02_return_kth_to_last import get_size
+import pytest
+
+
+def sum_lists_recursive(ll1, ll2) -> LinkedList:
+    def sum_lists_helper(ll1_head, ll2_head, remainder, summed_list):
+        if ll1_head is None and ll2_head is None:
+            if remainder != 0:
+                summed_list.add(remainder)
+            return summed_list
+        elif ll1_head is None:
+            result = ll2_head.value + remainder
+            summed_list.add(result % 10)
+            return sum_lists_helper(ll1_head, ll2_head.next, result//10, summed_list)
+        elif ll2_head is None:
+            result = ll1_head.value + remainder
+            summed_list.add(result % 10)
+            return sum_lists_helper(ll1_head.next, ll2_head, result//10, summed_list)
+        else:
+            result = ll1_head.value + ll2_head.value + remainder
+            summed_list.add(result % 10)
+            return sum_lists_helper(ll1_head.next, ll2_head.next, result//10, summed_list)     
+    return sum_lists_helper(ll1.head, ll2.head, 0, LinkedList())
+
+
+def sum_lists_reverse(ll1, ll2) -> LinkedList:
+    summed_list = LinkedList()
+    
+    longer = ll1.head if get_size(ll1)>=get_size(ll2) else ll2.head
+    shorter = ll2.head if get_size(ll1)>=get_size(ll2) else ll1.head
+    remaining = 0
+    
+    while longer:
+        if shorter is None:
+            sum_digit = longer.value + remaining
+        else:
+            sum_digit = longer.value + remaining + shorter.value
+        digit = sum_digit % 10
+        remaining = sum_digit // 10
+        summed_list.add(digit)
+            
+        longer = longer.next
+        if shorter:
+            shorter = shorter.next
+            
+    # if we have remaining we need to add new element
+    if remaining != 0:
+        summed_list.add(remaining)
+        
+    return summed_list
 
 
 def sum_lists(ll_a, ll_b):
@@ -24,25 +74,25 @@ def sum_lists(ll_a, ll_b):
 
 
 # this solution does not pass tests
-# def sum_lists_followup(ll_a, ll_b):
-#     # Pad the shorter list with zeros
-#     if len(ll_a) < len(ll_b):
-#         for i in range(len(ll_b) - len(ll_a)):
-#             ll_a.add_to_beginning(0)
-#     else:
-#         for i in range(len(ll_a) - len(ll_b)):
-#             ll_b.add_to_beginning(0)
-#
-#     # Find sum
-#     n1, n2 = ll_a.head, ll_b.head
-#     result = 0
-#     while n1 and n2:
-#         result = (result * 10) + n1.value + n2.value
-#         n1 = n1.next
-#         n2 = n2.next
-#
-#     # Create new linked list
-#     return NumericLinkedList([int(i) for i in str(result)])
+def sum_lists_followup(ll_a, ll_b):
+    # Pad the shorter list with zeros
+    if len(ll_a) < len(ll_b):
+        for i in range(len(ll_b) - len(ll_a)):
+            ll_a.add_to_beginning(0)
+    else:
+        for i in range(len(ll_a) - len(ll_b)):
+            ll_b.add_to_beginning(0)
+
+    # Find sum
+    n1, n2 = ll_a.head, ll_b.head
+    result = 0
+    while n1 and n2:
+        result = (result * 10) + n1.value + n2.value
+        n1 = n1.next
+        n2 = n2.next
+
+    # Create new linked list
+    return NumericLinkedList([int(i) for i in str(result)])
 
 
 class NumericLinkedList(LinkedList):
@@ -111,5 +161,32 @@ def example():
     # print(sum_lists_followup(ll_a, ll_b))
 
 
+class TestSumListsRecursive:
+    def test_empty(self):
+        assert sum_lists_recursive(LinkedList(), LinkedList()).values() == LinkedList().values()
+        assert sum_lists_reverse(LinkedList(), LinkedList()).values() == LinkedList().values()
+    
+    def test_single_digit(self):
+        assert sum_lists_recursive(LinkedList([1]), LinkedList([2])).values() == LinkedList([3]).values()
+        assert sum_lists_reverse(LinkedList([1]), LinkedList([2])).values() == LinkedList([3]).values()
+    
+    def test_ll1_longer(self):
+        assert sum_lists_recursive(LinkedList([1, 2]), LinkedList([2])).values() == LinkedList([3, 2]).values()
+        assert sum_lists_reverse(LinkedList([1, 2]), LinkedList([2])).values() == LinkedList([3, 2]).values()
+    
+    def test_ll2_longer(self):
+        assert sum_lists_recursive(LinkedList([2]), LinkedList([1, 2])).values() == LinkedList([3, 2]).values()
+        assert sum_lists_reverse(LinkedList([2]), LinkedList([1, 2])).values() == LinkedList([3, 2]).values()
+    
+    def test_carry_end(self):
+        assert sum_lists_recursive(LinkedList([9, 9, 9]), LinkedList([1, 0, 0])).values() == LinkedList([0, 0, 0, 1]).values()
+        assert sum_lists_reverse(LinkedList([9, 9, 9]), LinkedList([1, 0, 0])).values() == LinkedList([0, 0, 0, 1]).values()
+    
+    def test_multiple_carry(self):
+        assert sum_lists_recursive(LinkedList([9, 9, 9]), LinkedList([9, 9, 9])).values() == LinkedList([8, 9, 9, 1]).values()
+        assert sum_lists_reverse(LinkedList([9, 9, 9]), LinkedList([9, 9, 9])).values() == LinkedList([8, 9, 9, 1]).values()
+
+
 if __name__ == "__main__":
     example()
+    pytest.main(args=[__file__])
