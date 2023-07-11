@@ -1,6 +1,27 @@
 import time
 
-from chapter_02.linked_list import LinkedList
+from linked_list import LinkedList
+
+
+def reverse_ll(linked_list):
+    reversed_ll = LinkedList()
+    runner = linked_list.head
+    while runner:
+        reversed_ll.add_to_beginning(runner.value)
+        runner = runner.next
+    return reversed_ll
+
+def is_palindrome_my(linked_list):
+    reversed_ll = reverse_ll(linked_list)
+    runner = linked_list.head
+    reversed_runner = reversed_ll.head
+    
+    while runner and reversed_runner:
+        if runner.value != reversed_runner.value:
+            return False
+        runner = runner.next
+        reversed_runner = reversed_runner.next
+    return True
 
 
 def is_palindrome(ll):
@@ -117,6 +138,7 @@ test_cases = [
 ]
 
 testable_functions = [
+    is_palindrome_my,
     is_palindrome,
     is_palindrome_constant_space,
     is_palindrome_recursive,
