@@ -1,4 +1,38 @@
-from chapter_02.linked_list import LinkedList
+from linked_list import LinkedList
+
+
+def get_size(linked_list):
+    head = linked_list.head
+    size = 0
+    while head:
+        head = head.next
+        size += 1
+    return size
+
+
+def my_intersection(ll1, ll2):
+    size_ll1 = get_size(ll1)
+    size_ll2 = get_size(ll2)
+    if size_ll1 >= size_ll2:
+        longer = ll1
+        shorter = ll2
+    else:
+        longer = ll2
+        shorter = ll1
+        
+    longer_runner = longer.head
+    shorter_runner = shorter.head
+    
+    for _ in range(abs(size_ll1 - size_ll2)):
+        longer_runner = longer_runner.next
+    
+    while longer_runner and shorter_runner:
+        if longer_runner == shorter_runner:
+            return True
+        longer_runner = longer_runner.next
+        shorter_runner = shorter_runner.next
+    
+    return False
 
 
 def intersection(list1, list2):
@@ -36,3 +70,4 @@ def test_linked_list_intersection():
 
     # should be 1
     assert intersection(a, b).value == 1
+    assert my_intersection(a, b).value == 1
