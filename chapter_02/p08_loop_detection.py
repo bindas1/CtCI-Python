@@ -1,4 +1,23 @@
-from chapter_02.linked_list import LinkedList
+from linked_list import LinkedList
+
+
+def has_loop(head, hash_map):
+    if not head:
+        return False, _
+    else:
+        if head in hash_map:
+            return True, head
+        else:
+            hash_map[head] = None
+            return has_loop(head.next, hash_map)
+
+
+def my_loop_detection(ll):
+    loop_exists, head = has_loop(ll.head, {})
+    if not loop_exists:
+        return None
+    else:
+        return head
 
 
 def loop_detection(ll):
@@ -33,3 +52,4 @@ def test_loop_detection():
 
     for ll, expected in tests:
         assert loop_detection(ll) == expected
+        assert my_loop_detection(ll) == expected
