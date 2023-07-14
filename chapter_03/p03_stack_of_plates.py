@@ -1,6 +1,41 @@
 import unittest
 
 
+class StackOfStacks():
+    def __init__(self, max_vals):
+        self.stacks = []
+        self.max_vals = max_vals
+    
+    def push(self, item):
+        if self.stacks == [] or len(self.stacks[-1]) == self.max_vals:
+            stack = Stack()
+            stack.push(item)
+            self.stacks.append(stack)
+        else:
+            self.stacks[-1].push(item)
+    
+    def pop(self):
+        if self.stacks == []:
+            raise ValueError('Stack of Stacks is empty so can not pop')
+        else:
+            elem = self.stacks[-1].pop()
+            if self.stacks[-1].is_empty():
+                self.stacks = self.stacks[:-1]
+            return elem
+    
+    def peek(self):
+        try:
+            return self.stacks[-1].peek()
+        except:
+            print("No items to peek")
+            
+    def popAt(self, index):
+        try:
+            return self.stacks[index].pop()
+        except:
+            print("No stack at this index")
+            
+
 class Node:
     def __init__(self, value):
         self.value = value
