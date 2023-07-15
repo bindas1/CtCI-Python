@@ -1,7 +1,36 @@
 # 3.4 Queue Via Stacks
 import unittest
+from stack import Stack
 
-from chapter_03.stack import Stack
+
+class QueueFromStacks():
+    def __init__(self):
+        self.stack1 = Stack()
+        self.stack2 = Stack()
+        
+    def add(self, item):
+        if self.stack1.is_empty():
+            self.stack1.push(item)
+        else:
+            self.stack2.push(item)
+    
+    def dequeue(self):
+        if self.stack1.is_empty():
+            while len(self.stack2) != 1:
+                self.stack1.push(self.stack2.pop())
+            return self.stack2.pop()
+        else:
+            while len(self.stack1) != 1:
+                self.stack2.push()
+            return self.stack1.pop()
+    
+    def is_empty(self):
+        return len(self) == 0
+
+    def __len__(self):
+        return len(self.stack1) + len(self.stack2)
+    
+    
 
 
 class MyQueue:
@@ -41,7 +70,7 @@ class Tests(unittest.TestCase):
 
     def test_size(self):
         for sequence in self.test_cases:
-            q = MyQueue()
+            q = QueueFromStacks() 
             for index, val in enumerate(sequence, start=1):
                 q.add(val)
                 assert len(q) == index
@@ -51,7 +80,7 @@ class Tests(unittest.TestCase):
 
     def test_add(self):
         for sequence in self.test_cases:
-            q = MyQueue()
+            q = QueueFromStacks() 
             for val in sequence:
                 q.add(val)
             assert q.peek() == sequence[0]
@@ -81,11 +110,11 @@ class Tests(unittest.TestCase):
 
     def test_remove(self):
         for sequence in self.test_cases:
-            q = MyQueue()
+            q = QueueFromStacks() 
             for val in sequence:
                 q.add(val)
             for i in range(len(sequence)):  # noqa
-                assert q.remove() == sequence[i]
+                assert q.dequeue() == sequence[i]
 
     def test_peek_simple(self):
         q = MyQueue()
@@ -94,7 +123,7 @@ class Tests(unittest.TestCase):
         assert q.peek() == 4
 
     def test_add_simple(self):
-        q = MyQueue()
+        q = QueueFromStacks() 
         q.add(4)
         q.add(6)
         assert q.peek() == 4
@@ -102,11 +131,11 @@ class Tests(unittest.TestCase):
         assert q.peek() != 101
 
     def test_remove_simple(self):
-        q = MyQueue()
+        q = QueueFromStacks() 
         q.add(4)
         q.add(6)
         assert len(q) == 2
-        assert q.remove() == 4
-        assert q.remove() == 6
+        assert q.dequeue() == 4
+        assert q.dequeue() == 6
         assert len(q) == 0
-        assert not q.remove()
+        assert not q.dequeue()
