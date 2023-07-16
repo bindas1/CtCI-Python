@@ -4,6 +4,43 @@ import unittest
 from chapter_03.stack import Stack
 
 
+def sort_stack(stack):
+    """Returns sorted stack"""
+    temp_stack = Stack()
+    
+    while not stack.is_empty():
+        elem = stack.pop()
+        if temp_stack.is_empty():
+            temp_stack.push(elem)
+            print("Adding elem to empty stack", elem)
+        else:
+            while not temp_stack.is_empty():
+                if temp_stack.peek() >= elem:
+                    temp_stack.push(elem)
+                    print("Adding elem to full stack", elem)
+                    break
+                else:
+                    print("Moving to the original stack", elem)
+                    stack.push(temp_stack.pop())
+            if temp_stack.is_empty():
+                print("Adding elem to the beginning of stack", elem)
+                temp_stack.push(elem)
+            
+    return temp_stack
+
+
+def sort_stack2(stack):
+    """Returns sorted stack"""
+    temp_stack = Stack()
+    
+    while not stack.is_empty():
+        elem = stack.pop()
+        while not temp_stack.is_empty() and not temp_stack.peek() > elem:
+            stack.push(temp_stack.pop())
+        temp_stack.push(elem)
+    return temp_stack
+
+
 class SortedStack(Stack):
     def __init__(self):
         super().__init__()
