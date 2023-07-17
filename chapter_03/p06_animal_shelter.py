@@ -1,4 +1,68 @@
 import time
+import string
+import random
+
+
+class Animal:
+    def __init__(self, name=''):
+        self.name = name if name != '' else random.choice(string.ascii_letters)
+        print("Hey my name is ", self.name)
+
+class Dog(Animal):
+    def __init__(self, name=''):
+        super().__init__(name)
+    
+    def __str__(self):
+        print("Hey my name is ", self.name)
+        
+class Cat(Animal):
+    def __init__(self, name=''):
+        super().__init__(name)
+    
+    def __str__(self):
+        print("Hey my name is ", self.name)
+
+import time
+
+class Queue:
+    def __init__(self):
+        self.items = []
+    
+    def enqueue(self, item):
+        self.items.append(item)
+    
+    def dequeue(self):
+        return self.items.pop(0)
+    
+    def peek(self):
+        return self.items[0] if self.items != [] else None
+    
+class AnimalShelter:
+    def __init__(self):
+        self.dogs = Queue()
+        self.cats = Queue()
+    
+    def enqueue(self, animal):
+        if isinstance(animal, Cat):
+            self.cats.enqueue((animal, time.time()))
+        else:
+            self.dogs.enqueue((animal, time.time()))
+    
+    def dequeueDog(self):
+        return self.dogs.dequeue()[0]
+    
+    def dequeueCat(self):
+        return self.cats.dequeue()[0]
+    
+    def dequeueAny(self):
+        if self.dogs.peek() is None:
+            return self.cats.dequeue()[0]
+        elif self.cats.peek() is None:
+            return self.dogs.dequeue()[0]
+        if self.dogs.peek()[1] < self.cats.peek()[1]:
+            return self.dogs.dequeue()[0]
+        else:
+            return self.cats.dequeue()[0]
 
 
 class Node:
