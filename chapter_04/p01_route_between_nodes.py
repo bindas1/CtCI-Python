@@ -17,6 +17,21 @@ from collections import deque
 # |  /
 # R
 
+def is_route_my_bfs(graph, start, end):
+    queue = []
+    queue.append(start)
+    nodes_marked = set()
+    
+    while queue != []:
+        node = queue.pop(0)
+        if node == end:
+            return True
+        nodes_marked.add(node)
+        for neighbor in graph[node]:
+            if neighbor not in nodes_marked:
+                queue.append(neighbor)
+    return False
+
 
 def is_route(graph, start, end, visited=None):
     if visited is None:
@@ -117,6 +132,11 @@ class Test(unittest.TestCase):
     def test_is_route_bidirectional(self):
         for [start, end, expected] in self.tests:
             actual = is_route_bidirectional(self.graph, start, end)
+            assert actual == expected
+    
+    def test_is_route_my_bfs(self):
+        for [start, end, expected] in self.tests:
+            actual = is_route_my_bfs(self.graph, start, end)
             assert actual == expected
 
 
