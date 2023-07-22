@@ -19,6 +19,20 @@ class Node:
         return self.disp()
 
 
+def create_bst(array):
+    match len(array):
+        case 0:
+            return None
+        case 1:
+            return Node(array[0])
+        case _:
+            mid = len(array) // 2
+            root_node = Node(array[mid])
+            root_node.left = create_bst(array[:mid])
+            root_node.right = create_bst(array[mid+1:])
+            return root_node
+
+
 def array_to_binary_tree(array, start, end):
     if start > end:
         return None
